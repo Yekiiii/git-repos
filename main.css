@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+  }
+
+  main {
+    margin: 20px;
+  }
+
+  #repositories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .repository {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .loader {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .pagination {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  input[type="number"] {
+    width: 50px;
+  }
+
+  input[type="search"] {
+    width: 200px;
+    margin-right: 10px;
+  }
+
+
+  /* Add this CSS to your existing stylesheet or style section */
+.topic {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 5px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+}
+
+.topics-container {
+  margin-top: 10px;
+}
+
+
+.pagButton{
+  height:50px; 
+  width: 120px;
+  border-radius: 7px;
+  background-color: black;
+  color:white;
+  border-style: solid;
+  border-color: white;
+  transition: 0.3s;
+}
+
+.pagNumButton{
+  height:50px; 
+  width: 50px;
+  border-radius: 7px;
+  background-color: black;
+  color:white;
+  border-style: solid;
+  border-color: white;
+  transition: 0.3s;
+}
+.pagNumButton:hover{
+  background-color:#333;
+  
+  transition: 0.3s;
+}
+
+
+.pagButton:hover{
+  background-color:#333;
+  
+  transition: 0.3s;
+}
+
+
+.styled-form {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 100vh;
+  margin:0;
+}
+/* Adjust spacing and width for better alignment */
+
+.perPage-label{
+  font-size: 20px;
+}
+
+.current{
+  background-color: white;
+  border-color: black;
+  color: black;
+}

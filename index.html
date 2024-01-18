@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofGJFC6k9tiQT7LlTQ/GZFjRIDDAVVoFjf" crossorigin="anonymous">
+
+    <title>Document</title>
+</head>
+<body>
+    <main>
+      <div class ="text-center">
+          <img id="pfp" class="rounded-circle mx-auto img-fluid" src="" alt="">
+
+          <h1 id="h-name">Loading..</h1>
+        </div>
+
+        <div class="container styled-form">
+          <div class="form-group" style="display: flex; flex-direction: row;">
+            <label class="perPage-label" for="perPage">Repositories per page:&nbsp; </label>
+            <input type="number" class="form-control" style="width: 70px;" id="perPage" min="10" max="100" value="10">&nbsp;
+            <button class="btn btn-dark" onclick="updatePerPage()">Update</button>
+          </div>
+          <div class="form-group search-input">
+            <input type="search" class="form-control" id="searchInput" oninput="filterRepositories()" placeholder="Search repositories">
+          </div>
+        </div>
+  
+      <div id="repositories"></div>
+  
+      <div class="loader" id="loader">Loading...</div>
+  
+      <div class="pagination d-flex justify-content-center align-items-center" id="pagination"></div>
+
+    </main>
+  <script>
+    
+    const apiUrl = 'https://api.github.com/users/johnpapa/repos';
+    let currentPage = 1;
+    let repositoriesPerPage = 10;
+    let totalRepositories = 0;
+    let repositories = [];
+    const pfp = document.getElementById('pfp');
+    const hname = document.getElementById('h-name');
+
+    async function fetchUserDetails(){
+      const userDetailsResponse = await fetch('https://api.github.com/users/johnpapa'); 
+      const userDetails = await userDetailsResponse.json();
+        
+      const userName = userDetails.name
+      const pfpUrl = userDetails.avatar_url;
+      console.log(pfpUrl);
+  
+      hname.textContent = userName;
+      pfp.src = pfpUrl;
+    }
+    fetchUserDetails();
+
+    
+    function updatePerPage() {
+      repositoriesPerPage = parseInt(document.getElementById('perPage').value);
+      currentPage = 1;
+      fetchRepositories();
+    }
+    
+
+    function filterRepositories() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const filteredRepositories = repositories.filter(repo => repo.name.toLowerCase().includes(searchTerm));
+      displayRepositories(filteredRepositories);
+    }
+
+    
+    function displayRepositories(repos) {
+      const repositoriesContainer = document.getElementById('repositories');
+      repositoriesContainer.innerHTML = '';
+
+      repos.forEach(repo => {
+        const repoElement = document.createElement('div');
+        repoElement.className = 'repository';
+        repoElement.innerHTML = `<h3>${repo.name}</h3><p>${repo.description || 'No description available'}</p>
+        <div class="topics-container">
+        <strong>Topics:</strong>
+        ${repo.topics.length > 0 ? repo.topics.map(topic => `<span class="topic">${topic}</span>`).join('') : 'No topics available'}
+      </div>`;
+        repositoriesContainer.appendChild(repoElement);
+      });
+    }
+
+    function displayPagination() {
+ 
+      
+      let totalPages = Math.ceil(totalRepositories / repositoriesPerPage);
+
+      const paginationContainer = document.getElementById('pagination');
+      paginationContainer.innerHTML = '';
+
+      const previousButton = document.createElement('button');
+      previousButton.textContent = 'Previous';
+      previousButton.onclick = () => {
+      
+        if (currentPage > 1) {
+          currentPage--;
+          fetchRepositories();
+        }
+      }
+      paginationContainer.appendChild(previousButton);
+
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.onclick = () => {
+            currentPage = i;
+            fetchRepositories();
+
+        };
+        paginationContainer.appendChild(pageButton);
+        if (i === currentPage) {
+        pageButton.className = "pagNumButton current";
+        } else {
+        pageButton.className = "pagNumButton";
+        }
+      }
+
+
+      const nextButton = document.createElement('button');
+      nextButton.textContent = 'Next';
+      nextButton.onclick = () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        fetchRepositories();
+      }
+    };
+    paginationContainer.appendChild(nextButton);
+
+
+    nextButton.className="pagButton";
+    
+    previousButton.className="pagButton";  
+  }
+
+
+    async function fetchRepositories() {
+      const loader = document.getElementById('loader');
+      loader.style.display = 'block';
+
+      const response = await fetch(`${apiUrl}?page=${currentPage}&per_page=${repositoriesPerPage}`);
+      const data = await response.json();
+
+      loader.style.display = 'none';
+
+      repositories = data;
+
+
+      const totalCountResponse = await fetch(apiUrl);
+      const totalCountData = await totalCountResponse.json();
+
+      totalRepositories = totalCountData.length;
+
+      displayRepositories(data);
+      displayPagination();
+}
+
+  
+
+
+    fetchRepositories();
+    
+    </script>
+</body>
+
+</html>
