@@ -37,7 +37,7 @@
     </main>
   <script>
     
-    const apiUrl = 'https://api.github.com/users/visionmedia/repos';
+    const apiUrl = 'https://api.github.com/users/c9s/repos';
     let currentPage = 1;
     let repositoriesPerPage = 10;
     let totalRepositories = 0;
@@ -46,7 +46,7 @@
     const hname = document.getElementById('h-name');
 
     async function fetchUserDetails(){
-      const userDetailsResponse = await fetch('https://api.github.com/users/visionmedia'); 
+      const userDetailsResponse = await fetch('https://api.github.com/users/c9s'); 
       const userDetails = await userDetailsResponse.json();
         
       const userName = userDetails.name
